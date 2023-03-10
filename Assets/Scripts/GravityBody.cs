@@ -35,11 +35,13 @@ public class GravityBody : MonoBehaviour
     
     void FixedUpdate()
     {
-        _rigidbody.AddForce(GravityDirection * (GRAVITY_FORCE * Time.fixedDeltaTime), ForceMode.Acceleration);
+        Vector3 targetGravityDirection = Vector3.up;
+        Quaternion targetRotation = Quaternion.FromToRotation(transform.up, -targetGravityDirection);
 
-        Quaternion upRotation = Quaternion.FromToRotation(transform.up, -GravityDirection);
-        Quaternion newRotation = Quaternion.Slerp(_rigidbody.rotation, upRotation * _rigidbody.rotation, Time.fixedDeltaTime * 3f);;
+        Quaternion newRotation = Quaternion.Slerp(_rigidbody.rotation, targetRotation * _rigidbody.rotation, Time.fixedDeltaTime * 3f);
         _rigidbody.MoveRotation(newRotation);
+
+        _rigidbody.AddForce(GravityDirection * (GRAVITY_FORCE * Time.fixedDeltaTime), ForceMode.Acceleration);
     }
 
     public void AddGravityArea(GravityArea gravityArea)
